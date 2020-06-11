@@ -7,16 +7,17 @@ const UserDetailsContextProvider = (props) => {
     height: '',
     weight: '',
     age: '',
-    sex: '',
-    ethnicGroup: '',
+    sex: 'Male',
+    ethnicGroup: 'Not stated',
     activityLevel: '',
   });
-  const [bmi, setBMI] = useState('');
+  const [bmi, setBMI] = useState(0);
   const [toggleResults, setToggleResults] = useState(false);
   const [weight, setWeight] = useState({
     healthy: 'a healthy weight',
-    obese: 'overweight',
-    slim: 'underweight',
+    obese: 'obese',
+    underWeight: 'underweight',
+    overweight: 'overweight',
   });
   const [indicator, setIndicator] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -62,6 +63,8 @@ const UserDetailsContextProvider = (props) => {
     setToggleResults(true);
     window.scrollTo(0, 0);
   };
+
+  console.log(userDetails);
 
   //   This function takes the user back to the form when a button is clicked
   const goBack = () => {

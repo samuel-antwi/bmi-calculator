@@ -10,6 +10,7 @@ import {
   Accordion,
   Card,
   Button,
+  Alert,
 } from 'react-bootstrap';
 
 const Calculator = () => {
@@ -66,12 +67,161 @@ const Calculator = () => {
                                 {bmi}
                               </h1>
                             </div>
+                            {/* show weight indicator based on bmi */}
                             <div>
                               <p className='lead'>
                                 Your results suggests you are <br />
                               </p>
-                              <h4 className='text-center'>{indicator}</h4>
+                              {bmi > 18.5 && bmi < 24.9 && (
+                                <h4 className='text-center text-muted'>
+                                  {weight.healthy}
+                                </h4>
+                              )}
+                              {bmi < 18.5 && (
+                                <h4 className='text-center text-muted'>
+                                  {weight.underWeight}
+                                </h4>
+                              )}
+
+                              {bmi > 24.9 && bmi < 29.9 && (
+                                <h4 className='text-center text-muted'>
+                                  {weight.overweight}
+                                </h4>
+                              )}
+                              {bmi > 30 && (
+                                <h4 className='text-center text-muted'>
+                                  {weight.obese}
+                                </h4>
+                              )}
                             </div>
+                          </div>
+                        </div>
+                        {/* shows bmi results information */}
+                        <div className='results-info my-4 bg-light p-3'>
+                          {bmi < 18.5 && (
+                            <>
+                              <p>
+                                If you are receiving treatment for an eating
+                                disorder then this tool is NOT to be used.
+                              </p>
+                              <p>
+                                There may be an underlying medical cause for
+                                your weight, or your diet may not be providing
+                                you with enough calories. We suggest you discuss
+                                this with your GP.
+                              </p>
+                            </>
+                          )}
+                          {bmi > 18.5 &&
+                            bmi < 24.9 &&
+                            userDetails.ethnicGroup === 'Black African' && (
+                              <>
+                                <p>
+                                  You’re in the healthy weight range but your
+                                  ethnicity increases your risk of health
+                                  problems like type 2 diabetes with a BMI of 23
+                                  or more.
+                                </p>
+                                <p>
+                                  Keep an eye on your BMI and try to avoid
+                                  putting on any more weight.
+                                </p>
+                                <p>
+                                  Check out our advice on healthy eating and
+                                  physical activity. If you're concerned about
+                                  your weight speak to your GP.
+                                </p>
+                              </>
+                            )}
+                          {bmi > 18.5 &&
+                            bmi < 24.9 &&
+                            userDetails.ethnicGroup === 'Not stated' && (
+                              <>
+                                <p>
+                                  You are in the healthy weight range. Keep an
+                                  eye on your weight and try to stay in the
+                                  healthy range.
+                                </p>
+                              </>
+                            )}
+                          {bmi > 18.5 &&
+                            bmi < 24.9 &&
+                            userDetails.ethnicGroup === 'White' && (
+                              <>
+                                We suggest you maintain your weight. We've got
+                                lots of workouts and activity ideas to help you
+                                stay active.
+                              </>
+                            )}
+                          {bmi > 24.9 && (
+                            <>
+                              <p>
+                                Losing more weight can have health benefits,
+                                such as lowering your blood pressure and
+                                reducing your risk of developing type 2
+                                diabetes.
+                              </p>
+                              <p>
+                                You should work towards achieving a healthier
+                                weight over time. We suggest you visit your GP
+                                to discuss.
+                              </p>
+                            </>
+                          )}
+                          {/* BMI Ranges */}
+                          <div className='bmi-ranges'>
+                            <h4 className='mt-4 font-weight-bold text-muted'>
+                              BMI Ranges
+                            </h4>
+
+                            <Alert variant='warning'>
+                              <Row>
+                                <Col>
+                                  <span className='font-weight-bold'>
+                                    Underweight
+                                  </span>
+                                </Col>
+                                <Col>
+                                  <span>BMI less than 18.5</span>
+                                </Col>
+                              </Row>
+                            </Alert>
+                            <Alert variant='success'>
+                              <Row>
+                                <Col>
+                                  <span className='font-weight-bold'>
+                                    Healthy weight
+                                  </span>
+                                </Col>
+                                <Col>
+                                  <span>BMI between 18.5 and 24.9</span>
+                                </Col>
+                              </Row>
+                            </Alert>
+                            <Alert variant='danger'>
+                              <Row>
+                                <Col>
+                                  <span className='font-weight-bold'>
+                                    Overweight
+                                  </span>
+                                </Col>
+                                <Col>
+                                  <span>BMI btween 25 and 30</span>
+                                </Col>
+                              </Row>
+                            </Alert>
+                            <Alert className='obese'>
+                              <Row>
+                                <Col>
+                                  <span className='font-weight-bold'>
+                                    Obese
+                                  </span>
+                                </Col>
+                                <Col>
+                                  <span>BMI over 30</span>
+                                </Col>
+                              </Row>
+                            </Alert>
                           </div>
                         </div>
                       </React.Fragment>
@@ -154,10 +304,9 @@ const Calculator = () => {
                               className='text-muted'
                               onChange={handleChange}
                               value={userDetails.sex}
-                              required
                               name='sex'
                               as='select'>
-                              <option>Male</option>
+                              <option defaultValue>Male</option>
                               <option>Female</option>
                             </Form.Control>
                           </Form.Group>
@@ -195,13 +344,13 @@ const Calculator = () => {
                             value={userDetails.ethnicGroup}
                             name='ethnicGroup'
                             as='select'>
-                            <option>Not stated</option>
+                            <option defaultValue>Not stated</option>
                             <option>White</option>
                             <option>Black Caribbean</option>
                             <option>Black African</option>
                             <option>Indian</option>
                             <option>Pakistani</option>
-                            <option>Chines</option>
+                            <option>Chinese</option>
                             <option>Mixed</option>
                           </Form.Control>
                         </Form.Group>
@@ -243,7 +392,6 @@ const Calculator = () => {
                         </Accordion>
                         <Form.Group>
                           <Form.Control
-                            required
                             className='text-muted'
                             onChange={handleChange}
                             value={userDetails.activityLevel}
@@ -303,5 +451,13 @@ const Styles = styled.div`
   }
   .form-control:focus {
     box-shadow: none;
+  }
+  .results-info {
+    border-top: 6px solid blue;
+  }
+
+  .obese {
+    background: crimson;
+    color: #fff;
   }
 `;
