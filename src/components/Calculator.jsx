@@ -15,18 +15,22 @@ import {
 
 const Calculator = () => {
   const {
-    isSubmitting,
+    other,
+    minority,
+    hide,
+    toggleButton,
     goBack,
     userDetails,
     bmi,
     toggleResults,
     weight,
-    indicator,
     isLoading,
     handleChange,
     resetForm,
     handleForm,
   } = useContext(UserDetailsContext);
+
+  // console.log(minority);
 
   return (
     <React.Fragment>
@@ -57,30 +61,33 @@ const Calculator = () => {
                           className='btn btn-primary my-3'>
                           <i className='fas fa-arrow-circle-left mr-2'></i>Back
                         </button>
+
                         <div className='results p-4'>
-                          <div className='d-flex justify-content-between'>
-                            <div>
-                              <h4 className='font-weight-bold text-muted'>
-                                BMI
-                              </h4>
-                              <h1 className='font-weight-bold display-3'>
-                                {bmi}
-                              </h1>
-                            </div>
-                            {/* show weight indicator based on bmi */}
-                            <div>
-                              <p className='lead'>
-                                Your results suggests you are <br />
-                              </p>
-                              {bmi > 18.5 && bmi < 24.9 && (
-                                <h4 className='text-center text-muted'>
-                                  {weight.healthy}
+                          <Row>
+                            <Col>
+                              <div>
+                                <h4 className='font-weight-bold text-muted'>
+                                  BMI
                                 </h4>
+                                <h1 className='font-weight-bold display-3 bmi'>
+                                  {bmi}
+                                </h1>
+                              </div>
+                            </Col>
+                            {/* show weight indicator based on bmi */}
+                            <Col>
+                              <span className='lead mr-2'>
+                                Your results suggests you are
+                              </span>
+                              {bmi > 18.5 && bmi < 24.9 && (
+                                <span className='text-center text-muted'>
+                                  {weight.healthy}
+                                </span>
                               )}
                               {bmi < 18.5 && (
-                                <h4 className='text-center text-muted'>
+                                <span className='text-center text-muted display-5'>
                                   {weight.underWeight}
-                                </h4>
+                                </span>
                               )}
 
                               {bmi > 24.9 && bmi < 29.9 && (
@@ -93,11 +100,12 @@ const Calculator = () => {
                                   {weight.obese}
                                 </h4>
                               )}
-                            </div>
-                          </div>
+                            </Col>
+                          </Row>
                         </div>
                         {/* shows bmi results information */}
-                        <div className='results-info my-4 bg-light p-3'>
+                        <i className='fas fa-info mt-5 text-white py-3 px-4 bg-primary'></i>
+                        <div className='results-info mb-4 bg-light p-3 lead'>
                           {bmi < 18.5 && (
                             <>
                               <p>
@@ -114,7 +122,7 @@ const Calculator = () => {
                           )}
                           {bmi > 18.5 &&
                             bmi < 24.9 &&
-                            userDetails.ethnicGroup === 'Black African' && (
+                            minority.includes(userDetails.ethnicGroup) && (
                               <>
                                 <p>
                                   You’re in the healthy weight range but your
@@ -135,22 +143,17 @@ const Calculator = () => {
                             )}
                           {bmi > 18.5 &&
                             bmi < 24.9 &&
-                            userDetails.ethnicGroup === 'Not stated' && (
+                            other.includes(userDetails.ethnicGroup) && (
                               <>
                                 <p>
                                   You are in the healthy weight range. Keep an
                                   eye on your weight and try to stay in the
                                   healthy range.
                                 </p>
-                              </>
-                            )}
-                          {bmi > 18.5 &&
-                            bmi < 24.9 &&
-                            userDetails.ethnicGroup === 'White' && (
-                              <>
-                                We suggest you maintain your weight. We've got
-                                lots of workouts and activity ideas to help you
-                                stay active.
+                                <p>
+                                  We've got lots of workouts and activity ideas
+                                  to help you stay active.
+                                </p>
                               </>
                             )}
                           {bmi > 24.9 && (
@@ -168,12 +171,63 @@ const Calculator = () => {
                               </p>
                             </>
                           )}
+                          {/* What is BMI */}
+                          <Accordion>
+                            <Accordion.Toggle
+                              onClick={() => toggleButton()}
+                              className='btn btn-block btn-info'
+                              variant='link'
+                              eventKey='0'>
+                              <div className='d-flex justify-content-between'>
+                                <u className='m-auto'>What is BMI?</u>
+                                {hide ? (
+                                  <i className='fas fa-chevron-down mt-1'></i>
+                                ) : (
+                                  <i className='fas fa-chevron-up mt-1'></i>
+                                )}
+                              </div>
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey='0'>
+                              <Card className='my-3'>
+                                <Card.Body>
+                                  <p className='text-muted lead'>
+                                    BMI uses your height and weight to work out
+                                    if you're a healthy weight, underweight or
+                                    overweight. Your BMI result is not the
+                                    perfect measure of your overall health. It
+                                    can't tell if you're carrying too much fat
+                                    or you've got a lot of muscle. You could use
+                                    your BMI result as a starting point for
+                                    further discussion with your GP. The adult
+                                    BMI doesn't take into account age, gender or
+                                    musclar build. This means that:
+                                  </p>
+                                  <li className='py-2'>
+                                    Older adults can have a healthy BMI but
+                                    still have too much fat. This is because
+                                    older adults tend to have more body fat than
+                                    younger adults.
+                                  </li>
+                                  <li className='py-2'>
+                                    Women can have a healthy BMI but still have
+                                    too much fat. This is because women tend to
+                                    have more body fat than men with the same
+                                    BMI.
+                                  </li>
+                                  <li className='py-2'>
+                                    If you're from a black and ethnic minority
+                                    group, you're at increased risk of type 2
+                                    diabetes with a BMI of 23 or more.
+                                  </li>
+                                </Card.Body>
+                              </Card>
+                            </Accordion.Collapse>
+                          </Accordion>
                           {/* BMI Ranges */}
                           <div className='bmi-ranges'>
                             <h4 className='mt-4 font-weight-bold text-muted'>
                               BMI Ranges
                             </h4>
-
                             <Alert variant='warning'>
                               <Row>
                                 <Col>
@@ -228,6 +282,7 @@ const Calculator = () => {
                     )}
                   </React.Fragment>
                 ) : (
+                  // BMI Calculator form
                   <Form onSubmit={handleForm}>
                     <Row>
                       <Col md={4}>
@@ -235,11 +290,6 @@ const Calculator = () => {
                           <Form.Label className='lead'>Height</Form.Label>
                           <p className='text-muted'>Centimeters</p>
                           <Form.Control
-                            className={
-                              !userDetails.height.length && isSubmitting
-                                ? 'form-error'
-                                : ''
-                            }
                             required
                             onChange={handleChange}
                             type='number'
@@ -453,11 +503,19 @@ const Styles = styled.div`
     box-shadow: none;
   }
   .results-info {
-    border-top: 6px solid blue;
+    border-top: 6px solid #0275d8;
   }
 
   .obese {
     background: crimson;
     color: #fff;
+  }
+  .fa-info {
+    font-size: 20px;
+  }
+  @media (max-width: 768px) {
+    .bmi {
+      font-size: 3rem;
+    }
   }
 `;

@@ -1,8 +1,16 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
 export const UserDetailsContext = createContext();
 const UserDetailsContextProvider = (props) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [minority] = useState([
+    'Black African',
+    'Black Caribbean',
+    'Indian',
+    'Mixed',
+    'Pakistani',
+    'Chinese',
+  ]);
+  const [other] = useState(['Not stated', 'White']);
   const [userDetails, setUserDetails] = useState({
     height: '',
     weight: '',
@@ -19,8 +27,9 @@ const UserDetailsContextProvider = (props) => {
     underWeight: 'underweight',
     overweight: 'overweight',
   });
-  const [indicator, setIndicator] = useState('');
+
   const [isLoading, setIsLoading] = useState(false);
+  const [hide, setHide] = useState(true);
 
   //   This function handles all the input form changes and append to the state.
   const handleChange = (e) => {
@@ -56,31 +65,34 @@ const UserDetailsContextProvider = (props) => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
-    setIsSubmitting(true);
+    }, 2000);
     const calculatedBMI = calculateBMI(userDetails.weight, userDetails.height);
     setBMI(calculatedBMI.toFixed(1));
     setToggleResults(true);
     window.scrollTo(0, 0);
   };
 
-  console.log(userDetails);
-
   //   This function takes the user back to the form when a button is clicked
   const goBack = () => {
     setToggleResults(false);
   };
 
+  const toggleButton = () => {
+    setHide((hide) => (hide = !hide));
+  };
+
   return (
     <UserDetailsContext.Provider
       value={{
+        other,
+        minority,
+        hide,
+        toggleButton,
         goBack,
-        isSubmitting,
         userDetails,
         bmi,
         toggleResults,
         weight,
-        indicator,
         isLoading,
         handleChange,
         resetForm,
